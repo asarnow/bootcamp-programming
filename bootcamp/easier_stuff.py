@@ -40,6 +40,8 @@ EXPERIMENT_FILE = os.path.join(app.root_path, 'data', 'experiment_data.txt')
 # e.g. [[('YAL001C', -0.06), ('YAL002W', -0.3), ('YAL003W', -0.07), ... ],
 #       [('YAL001C', -0.58), ('YAL002W', 0.23), ('YAL003W', -0.25), ... ],
 #        ... ]
+
+#Create global dictionary for data d and gene info g_infor
 d = {}
 g_info = {}
 
@@ -80,7 +82,7 @@ def parse_genes():
                             d[cnt] = []
                         d[cnt].append((tok[0], (val)))
                         cnt += 1
-    pass
+    return g_info
 
 
 # map from a gene's systematic name to its standard name
