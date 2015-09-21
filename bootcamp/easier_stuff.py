@@ -5,7 +5,7 @@
 
 # Except it doesn't work, because you need to write all the functions!
 
-# Some of these functions will just make the website easier to use. Some of them are
+# Some of these functions will just make the w  ebsite easier to use. Some of them are
 # important for the enrichment and clustering tasks that your teammates are working on.
 
 # If you need any help, ask your team or a TA.
@@ -14,7 +14,6 @@
 # (don't delete this but don't worry about it either)
 import os # a built-in module, for dealing with filenames
 from . import app # this is part of the website guts
-
 
 
 # These are all the files you have to work with. Go open them in a text editor so you can
@@ -41,7 +40,25 @@ EXPERIMENT_FILE = os.path.join(app.root_path, 'data', 'experiment_data.txt')
 # e.g. [[('YAL001C', -0.06), ('YAL002W', -0.3), ('YAL003W', -0.07), ... ],
 #       [('YAL001C', -0.58), ('YAL002W', 0.23), ('YAL003W', -0.25), ... ],
 #        ... ]
+d = {}
+
+
 def experiment():
+    if len(d) == 0:
+        with open(EXPERIMENT_FILE, 'rU') as f:
+            for l in f:
+                if l.startswith("Y"):
+                    tok = l.strip().split('\t')
+                    cnt = 0
+                    for val in tok[1:]:
+                        if cnt not in d:
+                            d[cnt] = []
+                        d[cnt].append((tok[0], float(val)))
+                        cnt += 1
+    return d
+
+
+def parse_genes():
     pass
 
 
