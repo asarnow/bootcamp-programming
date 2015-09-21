@@ -67,13 +67,13 @@ def parse_genes():
                 if l.startswith("Y"):
                     tok = l.strip().split('\t')
                     genes[tok[0]] = Gene(name=tok[1], description=tok[2])
-    return genes
 
 
 # map from a gene's systematic name to its standard name
 # e.g. gene_name('YGR188C') returns 'BUB1'
 def gene_name(gene):
-    pass
+    parse_genes()
+    return genes[gene]
 
 
 # map from a gene's systematic name to a list of the values for that gene,
