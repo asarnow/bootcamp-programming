@@ -41,8 +41,39 @@ EXPERIMENT_FILE = os.path.join(app.root_path, 'data', 'experiment_data.txt')
 # e.g. [[('YAL001C', -0.06), ('YAL002W', -0.3), ('YAL003W', -0.07), ... ],
 #       [('YAL001C', -0.58), ('YAL002W', 0.23), ('YAL003W', -0.25), ... ],
 #        ... ]
+d = {}
+
 def experiment():
-    pass
+	#open experiment file, read only, universal endings, handle "f"
+	with open(EXPERIMENT_FILE, 'rU') as f:
+		#Create empty dictionary
+		d={}
+		#index over f by line
+		for l in f:
+			#check if first character in string is Y
+			if l.startswith("Y")
+				#Parse string by tab and strip whitespace
+				tok = l.strip().split('/t')
+				cnt = 0
+				#index over list 
+				for val in tok[1:]:
+					#create dictionary Key based off counter if not already created
+					if cnt not in d:
+						d[cnt] = []
+					#add Yeast Gene name and experiment value to experiment# key
+					d[cnt].append((tok[0], float(val)))
+					#move to next experiment value in line
+					cnt += 1
+	return d
+			
+def parse_genes():
+	with open(GENE_INFO, 'rU') as f:
+	d={}
+	for l in f:
+		if l.startwith("Y")
+			tok = 
+		
+	
 
 
 # map from a gene's systematic name to its standard name
