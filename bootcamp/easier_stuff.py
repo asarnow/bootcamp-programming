@@ -12,9 +12,9 @@
 
 
 # (don't delete this but don't worry about it either)
-import os # a built-in module, for dealing with filenames
+import os  # a built-in module, for dealing with filenames
 from collections import namedtuple
-from . import app # this is part of the website guts
+from . import app  # this is part of the website guts
 
 
 # These are all the files you have to work with. Go open them in a text editor so you can
@@ -35,7 +35,7 @@ GO_MEMBERSHIP = os.path.join(app.root_path, 'data', 'go_membership.txt')
 # ratios versus untreated control.
 EXPERIMENT_FILE = os.path.join(app.root_path, 'data', 'experiment_data.txt')
 
-#Create global dictionary for data d and gene info g_infor
+# Create global dictionary for data d and gene info g_infor
 experiments = {}
 Gene = namedtuple("Gene", "name description")
 genes = {}
@@ -47,26 +47,26 @@ genes = {}
 #       [('YAL001C', -0.58), ('YAL002W', 0.23), ('YAL003W', -0.25), ... ],
 #        ... ]
 def experiment():
-	#only run fucntion if dictionary d is empty
+    # only run function if dictionary d is empty
     if len(experiments) == 0:
-    	#open EXPERIMENT_FILE, read only, Universal ending, as 'f'
+        # open EXPERIMENT_FILE, read only, Universal ending, as 'f'
         with open(EXPERIMENT_FILE, 'rU') as f:
-        	#parse f by line l
+            # parse f by line l
             for l in f:
-            	#check if l starts with 'Y'
+                # check if l starts with 'Y'
                 if l.startswith("Y"):
-                	#split l into list by tabs and strip white space
+                    # split l into list by tabs and strip white space
                     tok = l.strip().split('\t')
                     cnt = 0
-                    #parse list l 
+                    # parse list l
                     for val in tok[1:]:
-                    	# check if experiment ID Key exists in dictionary already
+                        # check if experiment ID Key exists in dictionary already
                         if cnt not in experiments:
-                            #Create KEY if it does not exist in dictionary as empty list
+                            # Create KEY if it does not exist in dictionary as empty list
                             experiments[cnt] = []
-                        #add gene name and experiment value to expID key in dictionary
+                        # add gene name and experiment value to expID key in dictionary
                         experiments[cnt].append((tok[0], float(val)))
-						#move onto next experiment ID, aka column
+                        # move onto next experiment ID, aka column
                         cnt += 1
     return experiments
 
@@ -78,7 +78,6 @@ def parse_genes():
                 if l.startswith("Y"):
                     tok = l.strip().split('\t')
                     genes[tok[0]] = Gene(name=tok[1], description=tok[2])
-
 
 
 # map from a gene's systematic name to its standard name
