@@ -36,7 +36,7 @@ GO_MEMBERSHIP = os.path.join(app.root_path, 'data', 'go_membership.txt')
 EXPERIMENT_FILE = os.path.join(app.root_path, 'data', 'experiment_data.txt')
 
 experiments = {}
-Gene = namedtuple("name", "description")
+Gene = namedtuple("Gene", "name description")
 genes = {}
 
 
@@ -80,7 +80,12 @@ def gene_name(gene):
 # across all of the experiments.
 # e.g. gene_data('YGR188C') returns [-0.09, 0.2, -0.07, ... ]
 def gene_data(gene):
-    pass
+    experiment()
+    # for vl in experiments.values():
+    #     for g in vl:
+    #         if g[0] == gene
+    #             g[1]
+    return [g[1] for g in (vl for vl in experiments.values()) if g[0] == gene]
 
 
 # map from a systematic name to some info about the gene (whatever you want),
