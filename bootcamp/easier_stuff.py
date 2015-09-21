@@ -96,7 +96,7 @@ def gene_data(gene):
     #     for g in vl:
     #         if g[0] == gene
     #             g[1]
-    return [g[1] for g in (vl for vl in experiments.values()) if g[0] == gene]
+    pass
 
 
 # map from a systematic name to some info about the gene (whatever you want),
