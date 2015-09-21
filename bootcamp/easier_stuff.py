@@ -41,10 +41,35 @@ EXPERIMENT_FILE = os.path.join(app.root_path, 'data', 'experiment_data.txt')
 #       [('YAL001C', -0.58), ('YAL002W', 0.23), ('YAL003W', -0.25), ... ],
 #        ... ]
 d = {}
-
+g_info = {}
 
 def experiment():
+	#only run fucntion if dictionary d is empty
     if len(d) == 0:
+    	#open EXPERIMENT_FILE, read only, Universal ending, as 'f'
+        with open(EXPERIMENT_FILE, 'rU') as f:
+        	#parse f by line l
+            for l in f:
+            	#check if l starts with 'Y'
+                if l.startswith("Y"):
+                	#split l into list by tabs and strip white space
+                    tok = l.strip().split('\t')
+                    cnt = 0
+                    #parse list l 
+                    for val in tok[1:]:
+                    	# check if experiment ID Key exists in dictionary already
+                        if cnt not in d:
+                        	#Create it if it does not as empty list
+                            d[cnt] = []
+                        #add gene name and experiment value to expID key in dictionary
+                        d[cnt].append((tok[0], float(val)))
+                        #move onto next experiment ID, aka column
+                        cnt += 1
+    return d
+
+
+def parse_genes():
+	if len(g_info) == 0:
         with open(EXPERIMENT_FILE, 'rU') as f:
             for l in f:
                 if l.startswith("Y"):
@@ -53,12 +78,8 @@ def experiment():
                     for val in tok[1:]:
                         if cnt not in d:
                             d[cnt] = []
-                        d[cnt].append((tok[0], float(val)))
+                        d[cnt].append((tok[0], (val)))
                         cnt += 1
-    return d
-
-
-def parse_genes():
     pass
 
 
