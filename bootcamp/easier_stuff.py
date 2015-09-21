@@ -13,6 +13,7 @@
 
 # (don't delete this but don't worry about it either)
 import os # a built-in module, for dealing with filenames
+from collections import namedtuple
 from . import app # this is part of the website guts
 
 
@@ -34,32 +35,39 @@ GO_MEMBERSHIP = os.path.join(app.root_path, 'data', 'go_membership.txt')
 # ratios versus untreated control.
 EXPERIMENT_FILE = os.path.join(app.root_path, 'data', 'experiment_data.txt')
 
+experiments = {}
+Gene = namedtuple("name", "description")
+genes = {}
+
 
 # return a list or dictionary that maps from the id of an experiment (an int: 0, 1, ..)
 # to a list of (systematic name, fold-change value) tuples
 # e.g. [[('YAL001C', -0.06), ('YAL002W', -0.3), ('YAL003W', -0.07), ... ],
 #       [('YAL001C', -0.58), ('YAL002W', 0.23), ('YAL003W', -0.25), ... ],
 #        ... ]
-d = {}
-
-
 def experiment():
-    if len(d) == 0:
+    if len(experiments) == 0:
         with open(EXPERIMENT_FILE, 'rU') as f:
             for l in f:
                 if l.startswith("Y"):
                     tok = l.strip().split('\t')
                     cnt = 0
                     for val in tok[1:]:
-                        if cnt not in d:
-                            d[cnt] = []
-                        d[cnt].append((tok[0], float(val)))
+                        if cnt not in experiments:
+                            experiments[cnt] = []
+                        experiments[cnt].append((tok[0], float(val)))
                         cnt += 1
-    return d
+    return experiments
 
 
 def parse_genes():
-    pass
+    if len(genes) == 0:
+        with open(GENE_INFO, 'rU') as f:
+            for l in f:
+                if l.startswith("Y"):
+                    tok = l.strip().split('\t')
+                    genes[tok[0]] = Gene(name=tok[1], description=tok[2])
+    return genes
 
 
 # map from a gene's systematic name to its standard name
