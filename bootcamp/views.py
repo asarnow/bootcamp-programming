@@ -110,7 +110,7 @@ def experiment(exp, n=10):
         if fig_dict is None:
             flash("You could maybe implement <code>plot_experiment()</code>")
 
-        similar_exp = hs.similar_experiments(exp, exp_data, n)
+        similar_exp = hs.similar_experiments(exp, es.data["data"], n)
         if similar_exp is None:
             flash("You could maybe implement <code>similar_experiments()</code>")
             similar_exp = []
@@ -169,9 +169,10 @@ def enrichment(exp, aspect, n=100):
 
     go_list = list(reduce(set.union, go_list, set()))
     go_info = {goid:es.go_info(goid) for goid in go_list}
-    go_dict = {gene:es.go_to_gene(gene) for gene in go_list}
+    # go_dict = {goid:es.go_to_gene(goid) for goid in go_list}
 
-    scores = hs.calculate_enrichment(exp_data, go_dict, n)
+    scores = hs.calculate_enrichment(exp_data, es.get_go_map(), n)
+    # print scores
 
     return render_template("enrichment.html", exp=exp, go_info=go_info,
                            e_scores=scores[0][:10], ne_scores=scores[1][:10])

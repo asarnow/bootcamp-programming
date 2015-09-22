@@ -7,9 +7,11 @@
 # out. But don't forget to help your teammates, and to figure out your perturbation!
 
 import scipy.stats
-
+import numpy as np
+import scipy.spatial as spc
 import mpld3
-import matplotlib.pyplot
+import matplotlib.pyplot as plot
+
 
 # The point of this function is to calculate the enrichment scores for a single
 # experiment--the probability that the list of genes is positively or negatively
@@ -30,13 +32,34 @@ import matplotlib.pyplot
 #   testing for positive enrichment (sorted from most significant to least)
 # - another list of GOIDs and enrichment scores,
 #   testing for negative enrichment (again sorted)
-#
-def calculate_enrichment(gene_data, go_to_genes, n=100):
-    # You need to replace this with something useful
-    positive_enrichment_scores = []
-    negative_enrichment_scores = []
+def calculate_enrichment(gene_data, genes_to_go, n=100):
+    gene_data_s = sorted(gene_data, key=lambda x: x[1])
+    go_pos = [genes_to_go[tpl[0]] for tpl in gene_data_s[0:n]]
+    go_neg = [genes_to_go[tpl[0]] for tpl in gene_data_s[-n:-1]]
+    goids = []
+    for k in genes_to_go:
+        if k.startswith("Y"):
+            for goid in genes_to_go[k]:
+                goids.append(goid)
+    positive_enrichment_scores = compute_enrichment_scores(go_pos, goids, len(gene_data_s))
+    negative_enrichment_scores = compute_enrichment_scores(go_neg, goids, len(gene_data_s))
+    # negative_enrichment_scores.reverse()
+    return positive_enrichment_scores, negative_enrichment_scores
 
-    return positive_enrichment_scores,negative_enrichment_scores
+
+def compute_enrichment_scores(go_pos, goids, sz):
+    positive_enrichment_scores = []
+    local_goids = []
+    for goid_set in go_pos:
+        for goid in goid_set:
+            local_goids.append(goid)
+    local_goids_uni = set(local_goids)
+    for goid in local_goids_uni:
+            global_cnt = goids.count(goid)
+            cnt = local_goids.count(goid)
+            prb = scipy.stats.hypergeom.sf(cnt, sz, global_cnt, len(go_pos))
+            positive_enrichment_scores.append((goid, prb))
+    return sorted(positive_enrichment_scores, key=lambda x: x[1])
 
 
 # It would be useful to group experiments together. This function is one way to
@@ -44,16 +67,22 @@ def calculate_enrichment(gene_data, go_to_genes, n=100):
 # and return them as a list (of integers)
 #
 # inputs:
-# - the index for a single experiment (an int: 0, 1, ..)
-# - a list or dictionary that maps from id to experiment data--this will be
-#   the output from easier_stuff.experiment()
+# - column index
+# - a matrix
 # - an int, N, to use as a parameter
 #
 # outputs:
 # - a list of the N most similar experiments (determined however you like)
 #
 def similar_experiments(exp, exp_data, n=10):
-    return None
+    d = []
+    for i in xrange(0, exp_data.shape[1]):
+        if i == exp:
+            continue
+        # d.append((i, spc.distance.euclidean(exp_data[:, exp], exp_data[:, i])))
+        d.append(spc.distance.euclidean(exp_data[:, exp], exp_data[:, i]))
+    # return sorted(d[0:n], key=lambda x: x[1])
+    return np.argsort(d)
 
 
 # The more general version of the above function is to cluster the experiments.
@@ -79,6 +108,7 @@ def similar_experiments(exp, exp_data, n=10):
 #      and it returns the path "static/a_figures.png" as its output
 #
 def plot_experiment_overview(experiment_data):
+
     return None
 
 
@@ -93,11 +123,12 @@ def plot_experiment_overview(experiment_data):
 # - a dictionary, created by the mpld3 module from a figure you've made (see below)
 #
 def plot_experiment(gene_data):
-    mpld3_dict = None
+    fig = plot.figure()
+
 
     # When you've made your plot, convert it with the mpld3 library like so:
     # mpld3_dict = mpld3.fig_to_dict(fig)
-
+    mpld3_dict = None
     return mpld3_dict
 
 
